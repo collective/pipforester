@@ -7,6 +7,7 @@ import json
 @click.command()
 @click.option("--input", "-i", type=click.File("r"))
 @click.option("--output", "-o")
+# @click.option("--cycles", "-c")
 def main(input, output):
     deptreedata = json.load(input)
     G = deptree.graph_from_json(deptreedata)
