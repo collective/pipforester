@@ -1,0 +1,84 @@
+[project]
+name = "pipforester"
+description = "A tool to analyze the dependency graph of a pip package."
+version = "1.0.0a1.dev0"
+keywords = ["pip", "graph", "analysis"]
+authors = [
+  {name = "Jens Klein et al", email = "jk@kleinundpartner.at" }
+]
+requires-python = ">=3.7"
+license = { text = "BSD 2-Clause License" }
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Build Tools",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "pipdeptree",
+    "networkx",
+    "click",
+]
+dynamic = ["readme"]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+]
+
+[project.urls]
+Homepage = "https://github.com/collective/pipforester"
+"Bug Reports" = "https://github.com/collective/pipforester/issues"
+Source = "https://github.com/collective/pipforester/"
+
+[project.scripts]
+pipforester = "pipforester:main"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.md", "CHANGES.md", "LICENSE.md"], content-type = "text/markdown"}
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "src",
+]
+
+[tool.isort]
+profile = "black"
+force_alphabetical_sort = true
+force_single_line = true
+lines_after_imports = 2
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.flake8]
+# Excludes due to known issues or incompatibilities with black:
+# BLK100: Black would make changes. https://pypi.org/project/flake8-black/
+# W503: https://github.com/psf/black/search?q=W503&unscoped_q=W503
+# E231: https://github.com/psf/black/issues/1202
+ignore = "BLK100,E231,W503,D100,D101,D102,D102,D103,D104,D105,D106,D107,D202,D205"
+statistics = 1
+# black official is 88, but can get longer
+max-line-length = 120
+
+[tool.doc8]
+# TODO: Remove current max-line-lengh ignore in follow-up and adopt black limit.
+# max-line-length = 88
+ignore = "D001"
+
