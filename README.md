@@ -9,8 +9,8 @@ Forester tools for [pipdeptree](https://pypi.org/project/pipdeptree/) outputs to
 
 ## Usage
 
-First call *pipdeptree* to create a JSON file of the installed dependecies,
-second call pipforester to create cleaned up dot file.
+First, call *pipdeptree* to create a JSON file of the installed dependencies,
+and second call *pipforester* to create a cleaned-up dot file.
 Finally use a Graphviz DOT-file visualizer, i.e. *xdot* on Linux, to view the graph.
 
 ```shell
@@ -18,7 +18,7 @@ pipdeptree -j >forest.json
 pipforester -i forest.json -o forest.dot
 ```
 
-To only generate a graph containing only cyclic transitive dependencies, use the `--cycles` option:
+To generate a graph containing only cyclic transitive dependencies, use the `--cycles` option:
 
 ```shell
 pipdeptree -j >forest.json
