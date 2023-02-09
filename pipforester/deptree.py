@@ -28,6 +28,7 @@ def graph_from_json(data):
 
 
 def detect_cyclic_edges(G):
+    print("Detecting cyclic edges")
     bad_edges = set()
     for cycle in nx.simple_cycles(G):
         bad_edges.add((cycle[-1], cycle[0]))
@@ -35,28 +36,30 @@ def detect_cyclic_edges(G):
 
 
 def remove_cyclic_edges(G, bad_edges):
+    print("Removing cyclic edges")
     for edge in bad_edges:
         G.remove_edge(edge[0], edge[1])
 
 
 def add_cyclic_edges(G, bad_edges):
+    print("Adding cyclic edges")
     for edge in bad_edges:
         G.add_edge(edge[0], edge[1], color="red")
 
 
 def remove_direct_edges(G):
+    print("Removing direct edges")
     to_remove = []
     for node in G.nodes():
         # get all edges origin in node
-        print(f"Node: {node}")
-        for out_edge in G.out_edges(node):
-            print(f"Out edge: {out_edge}")
+        print(f"  Node: {node}")
+        out_edges = list(G.out_edges(node))
+        for out_edge in out_edges:
+            print(f"    Out edge to {out_edge[1]}")
             for path in nx.all_simple_paths(G, node, out_edge[1]):
                 # if there is a path from node to out_edge[1] that is longer than 1, then
                 # remove the edge
-                if len(path) > 1:
-                    to_remove.append(out_edge)
+                if len(path) > 2:
+                    print(f"    -> remove")
+                    G.remove_edge(out_edge[0], out_edge[1])
                     break
-
-    for edge in to_remove:
-        G.remove_edge(edge[0], edge[1])
