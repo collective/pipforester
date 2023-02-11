@@ -48,6 +48,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 zip-safe = false
+packages = ["pipforester"]
 
 [tool.setuptools.dynamic]
 readme = {file = ["README.md", "CHANGES.md", "LICENSE.md"], content-type = "text/markdown"}
