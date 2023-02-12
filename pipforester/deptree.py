@@ -1,5 +1,6 @@
 import json
 import networkx as nx
+import pygraphviz
 
 
 def read_deptree(filepath):
@@ -8,8 +9,52 @@ def read_deptree(filepath):
     return data
 
 
-def write_dotfile(G, filepath):
-    nx.nx_agraph.write_dot(G, filepath)
+_SUBGRAPHS = {
+    "plone": "Plone",
+    "zope": "Zope",
+}
+
+
+def find_subgraph(node) -> str | None:
+    for subgraph in _SUBGRAPHS:
+        if node.startswith(subgraph):
+            return subgraph
+    return None
+
+
+def grouped_agraph(nxgraph):
+    """Returns a pygraphviz graph."""
+    agraph = nx.nx_agraph.to_agraph(nxgraph)
+    agraph.subgraph(["plone", "plone.volto", "plone.app.upgrade"], name="plonetop", color="blue")
+
+    # group nodes
+    # nodes = {}
+    # for subgraphname in _SUBGRAPHS:
+    #     nodes[subgraphname] = []
+
+    # for nodename, nodedata in nxgraph.nodes(data=True):
+    #     subgraph_name = find_subgraph(nodename)
+    #     if subgraph_name is not None:
+    #         nodes[subgraph_name].append((nodename, nodedata))
+    # for subgraphname in nodes:
+    #     nodenames = [t[0] for t in nodes[subgraphname]]
+    #     agraph.subgraph(
+    #         nodenames,
+    #         name=subgraphname,
+    #         label=_SUBGRAPHS[subgraphname],
+    #         color="blue",
+    #         style="filled",
+    #         fillcolor="lightblue",
+    #     )
+    agraph.layout(prog="dot")
+    # agraph.draw('testree.png')
+    return agraph
+
+
+def write_dotfile(nxgraph, filepath):
+    agraph = grouped_agraph(nxgraph)
+    agraph.write(filepath)
+    agraph.clear()
 
 
 def graph_from_json(data):
@@ -52,6 +97,7 @@ def extract_cyclic_graph(G):
         bad_edges.add((cycle[-1], cycle[0]))
     return CG
 
+
 def remove_cyclic_edges(G, bad_edges):
     print("Removing cyclic edges")
     for edge in bad_edges:
@@ -78,10 +124,7 @@ def remove_direct_edges(G, ignore=None):
                 print(f"  Ignore cyclic: {node}")
                 continue
             print(f"    Out edge to {out_edge[1]}")
-            for path in nx.all_simple_paths(G, node, out_edge[1]):
-                # if there is a path from node to out_edge[1] that is longer than 1, then
-                # remove the edge
-                if len(path) > 2:
-                    print(f"    -> remove")
-                    G.remove_edge(out_edge[0], out_edge[1])
-                    break
+            # speedup: remove edge, then check if there is a path, if not add edge
+            G.remove_edge(out_edge[0], out_edge[1])
+            if not nx.has_path(G, node, out_edge[1]):
+                G.add_edge(out_edge[0], out_edge[1])
