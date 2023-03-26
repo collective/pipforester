@@ -73,7 +73,6 @@ def graph_from_json(data):
 
 
 def detect_cyclic_edges(G, mark=False):
-    print("Detecting cyclic edges")
     bad_edges = set()
     for cycle in nx.simple_cycles(G):
         if mark:
