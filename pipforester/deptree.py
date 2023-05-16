@@ -16,7 +16,6 @@ def graph_from_json(data):
     G = nx.DiGraph()
     for pkgdef in data:
         pkg = pkgdef["package"]
-        deps = pkgdef["dependencies"]
         G.add_node(
             pkg["key"],
             installed_version=pkg["installed_version"],
@@ -27,13 +26,14 @@ def graph_from_json(data):
     return G
 
 
-def detect_cyclic_edges(G, mark=False):
+def detect_cyclic_edges(G):
     print("Detecting cyclic edges")
     bad_edges = set()
-    for cycle in nx.simple_cycles(G):
-        if mark:
-            for idx in range(len(cycle) - 1):
-                G.edges[cycle[idx], cycle[idx + 1]]["color"] = "darkviolet"
+    cycles = nx.simple_cycles(G)
+    for cycle in cycles:
+        for idx in range(len(cycle) - 1):
+            print(f"found edge {cycle[idx]} -> {cycle[idx + 1]}")
+            bad_edges.add((cycle[idx], cycle[idx + 1]))
         bad_edges.add((cycle[-1], cycle[0]))
     return bad_edges
 
@@ -46,7 +46,6 @@ def extract_cyclic_graph(G):
         if (cycle[-1], cycle[0]) in bad_edges:
             continue
         for idx in range(len(cycle) - 1):
-            CG.add_edge(cycle[idx], cycle[idx + 1])
             CG.add_edge(f"{cycle[idx]} ({num})", f"{cycle[idx + 1]} ({num})")
         CG.add_edge(f"{cycle[-1]} ({num})", f"{cycle[0]} ({num})")
         bad_edges.add((cycle[-1], cycle[0]))
@@ -61,12 +60,12 @@ def remove_cyclic_edges(G, bad_edges):
 def add_cyclic_edges(G, bad_edges):
     print("Adding cyclic edges")
     for edge in bad_edges:
-        G.add_edge(edge[0], edge[1], color="darkviolet")
+        G.add_edge(edge[0], edge[1])
+        G.edges[edge[0], edge[1]]["color"] = "darkviolet"
 
 
 def remove_direct_edges(G, ignore=None):
     print("Removing direct edges")
-    to_remove = []
     if ignore is None:
         ignore = []
     for node in G.nodes():
@@ -79,9 +78,9 @@ def remove_direct_edges(G, ignore=None):
                 continue
             print(f"    Out edge to {out_edge[1]}")
             for path in nx.all_simple_paths(G, node, out_edge[1]):
-                # if there is a path from node to out_edge[1] that is longer than 1, then
-                # remove the edge
+                # if there is a path from node to out_edge[1] that is longer than 1,
+                # then remove the edge
                 if len(path) > 2:
-                    print(f"    -> remove")
+                    print("    -> remove")
                     G.remove_edge(out_edge[0], out_edge[1])
                     break
