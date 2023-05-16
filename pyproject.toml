@@ -1,7 +1,7 @@
 [project]
 name = "pipforester"
 description = "A tool to analyze the dependency graph of a pip package."
-version = "1.0.0"
+version = "1.0.1.dev0"
 keywords = ["pip", "graph", "analysis"]
 authors = [
   {name = "Jens Klein et al", email = "jk@kleinundpartner.at" }
