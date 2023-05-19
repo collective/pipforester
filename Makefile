@@ -1,8 +1,10 @@
 UNAME := $(shell uname)
 REQUIREMENTS := Plone -c https://dist.plone.org/release/6.0-dev/constraints.txt
 
+.PHONY: all
 all: build generate_graph
 
+.PHONY: build
 build:
 	# The Darwin-like OS implementation
 	if [ "$(UNAME)" = "Darwin" ]; then \
@@ -27,6 +29,7 @@ build:
 		./venvs/graph_venv/bin/pip install -r graph_requirements.txt; \
 	fi
 
+.PHONY: generate_graph
 generate_graph:
 	if [ "$(UNAME)" = "Darwin" ]; then \
 		./venvs/graph_venv/bin/pipdeptree --python ./venvs/plone_venv/bin/python -j -e 'zope*','zc.*','z3c.*','setuptools','six','zodb*','five.*','accesscontrol','piexif','pillow','cookiecutter','pycparser','cffi','zdaemon','zeo','extensionclass','acquisition','persistence','persistent','zexceptions','roman','datetime','record','missing','python-dateutil','arrow','jinja2-time','jinja2','markupsafe','beautifulsoup4','unidecode','transaction','lxml','future','btrees','docutils','simplejson','cssselect','pyrsistent','attrs','jsonschema','requests','pyjwt','authencoding','binaryornot','chardet','restrictedpython','documenttemplate','products.pythonscripts','collective.monkeypatcher','pytz','certifi','chameleon','charset-normalizer','click','idna','multimapping','multipart','paste','pastedeploy','pip','pipdeptree','python-gettext','python-slugify','text-unidecode','decorator','soupsieve','pyyaml','urllib3','wheel','zconfig','webtest','waitress','webob','wsgiproxy2','sgmllib3k','feedparser','markdown','mxmake','mxdev','inquirer','blessed','wcwidth','python-editor','readchar','importlib-metadata','importlib-resources','pkgutil-resolve-name','zipp' > ./trees/deptree.json; \
