@@ -68,5 +68,5 @@ Just run the `make` command in the project folder
 
 ## REQUIREMENTS
 
-By default are being used the `Plone -c https://dist.plone.org/release/6.0-dev/constraints.txt` requirements to analyze the dependencies,
+By default is being used the `Plone -c https://dist.plone.org/release/6.0-dev/constraints.txt` requirements to analyze the dependencies,
 but you can change it by passing the `REQUIREMENTS` variable to make es: `make REQUIREMENTS=myrequirements.txt`
