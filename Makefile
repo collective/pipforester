@@ -18,7 +18,7 @@ build:
 
 	# The Debian-like OS implementation
 	if [ "$(UNAME)" = "Linux" ]; then \
-		apt-get install graphviz; \
+		apt-get install -y graphviz; \
 		mkdir venvs; \
 		mkdir trees; \
 		python -m venv ./venvs/plone_venv; \
