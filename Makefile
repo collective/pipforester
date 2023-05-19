@@ -9,13 +9,14 @@ build:
 	# The Darwin-like OS implementation
 	if [ "$(UNAME)" = "Darwin" ]; then \
 		brew install graphviz; \
-		pip install --global-option=build_ext --global-option="-I/include/" --global-option="-L/lib/" pipdeptree pipforester; \
+		pip install --global-option=build_ext --global-option="-I$(brew --prefix graphviz)/include/" --global-option="-L$(brew --prefix graphviz)/lib/" pipdeptree pipforester; \
 		mkdir venvs; \
 		mkdir trees; \
 		python -m venv ./venvs/plone_venv; \
 		python -m venv ./venvs/graph_venv; \
-		./venvs/plone_venv/bin/pip install --no-cache $(REQUIREMENTS); \
-		./venvs/graph_venv/bin/pip install --no-cache -r graph_requirements.txt; \
+		./venvs/plone_venv/bin/pip install wheel;\
+		./venvs/plone_venv/bin/pip install $(REQUIREMENTS); \
+		./venvs/graph_venv/bin/pip install -r graph_requirements.txt; \
 	fi
 
 	# The Debian-like OS implementation
@@ -25,6 +26,7 @@ build:
 		mkdir trees; \
 		python -m venv ./venvs/plone_venv; \
 		python -m venv ./venvs/graph_venv; \
+		./venvs/plone_venv/bin/pip install wheel;\
 		./venvs/plone_venv/bin/pip install $(REQUIREMENTS); \
 		./venvs/graph_venv/bin/pip install -r graph_requirements.txt; \
 	fi
