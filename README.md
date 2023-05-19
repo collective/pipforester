@@ -60,3 +60,13 @@ pipforester -i forest.json --check-cycles
 
 See `pipforester --help` for details.
 
+# Generate the dependencies graph by one click
+Currenly implemented for MacOS and Debian
+
+## Usage
+Just run the `make` command in the project folder
+
+## REQUIREMENTS
+
+By default are being used the `Plone -c https://dist.plone.org/release/6.0-dev/constraints.txt` requirements to analyze the dependencies,
+but you can change it by passing the `REQUIREMENTS` variable to make es: `make REQUIREMENTS=myrequirements.txt`
