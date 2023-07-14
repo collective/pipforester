@@ -51,6 +51,7 @@ def extract_cyclic_graph(G):
         bad_edges.add((cycle[-1], cycle[0]))
     return CG
 
+
 def remove_cyclic_edges(G, bad_edges):
     print("Removing cyclic edges")
     for edge in bad_edges:
@@ -64,23 +65,5 @@ def add_cyclic_edges(G, bad_edges):
         G.edges[edge[0], edge[1]]["color"] = "darkviolet"
 
 
-def remove_direct_edges(G, ignore=None):
-    print("Removing direct edges")
-    if ignore is None:
-        ignore = []
-    for node in G.nodes():
-        # get all edges origin in node
-        print(f"  Node: {node}")
-        out_edges = list(G.out_edges(node))
-        for out_edge in out_edges:
-            if tuple(out_edge) in ignore:
-                print(f"  Ignore cyclic: {node}")
-                continue
-            print(f"    Out edge to {out_edge[1]}")
-            for path in nx.all_simple_paths(G, node, out_edge[1]):
-                # if there is a path from node to out_edge[1] that is longer than 1,
-                # then remove the edge
-                if len(path) > 2:
-                    print("    -> remove")
-                    G.remove_edge(out_edge[0], out_edge[1])
-                    break
+def remove_direct_edges(G):
+    return nx.transitive_reduction(G)

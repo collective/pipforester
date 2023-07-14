@@ -2,7 +2,7 @@
 
 ### 1.0.1 (unreleased)
 
-- nothing yet
+- use transitive_reduction from the NetworkX module to speed up edge removal. [@gogobd]
 
 ### 1.0.0 (2023-05-16)
 
