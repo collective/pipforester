@@ -22,6 +22,6 @@ def main(input, output, cycles, check_cycles):
     else:
         bad_edges = deptree.detect_cyclic_edges(graph)
         deptree.remove_cyclic_edges(graph, bad_edges)
-        graph = deptree.remove_direct_edges(graph, ignore=bad_edges)
+        graph = deptree.remove_direct_edges(graph)
         deptree.add_cyclic_edges(graph, bad_edges)
     deptree.write_dotfile(graph, output)
