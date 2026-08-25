@@ -58,5 +58,21 @@ pipdeptree -j >forest.json
 pipforester -i forest.json --check-cycles
 ```
 
+When checking a single distribution in CI, a cycle between third party packages is accurate
+but out of your hands: no change to your own code can break it.
+Pass `--select` (`-s`) with the name of the distribution under test to only fail on cycles it
+takes part in.
+Other cycles are still printed, prefixed with `ignored edge`, but do not change the exit code.
+
+```shell
+pipdeptree -j >forest.json
+pipforester -i forest.json --check-cycles -s plone.app.testing
+```
+
+The option is repeatable, and the name is normalized the way *pipdeptree* keys its nodes, so
+`plone.app.testing`, `plone-app-testing` and `Plone.App.Testing` are all the same distribution.
+Without `--select` every cycle is fatal, so a central package can keep watching the whole stack.
+`--select` applies to `--cycles` as well, which then graphs only the cycles you selected.
+
 See `pipforester --help` for details.
 
