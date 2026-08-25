@@ -3,7 +3,8 @@
 ## 1.0.2 (unreleased)
 
 
-- Nothing changed yet.
+- add a `--select`/`-s` option to only fail on cycles the given distribution takes part in,
+  so a package is not blocked by cycles it cannot fix. Fixes #6. [@remdub]
 
 
 ## 1.0.1 (2023-07-14)

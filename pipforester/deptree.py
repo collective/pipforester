@@ -1,5 +1,6 @@
 import json
 import networkx as nx
+import re
 
 
 def read_deptree(filepath):
@@ -26,11 +27,28 @@ def graph_from_json(data):
     return G
 
 
-def detect_cyclic_edges(G):
+def normalize_name(name):
+    """Normalize a distribution name the way pipdeptree keys its nodes."""
+    return re.sub(r"[-_.]+", "-", name).strip().lower()
+
+
+def cycle_is_selected(cycle, selection):
+    """Without a selection every cycle counts, otherwise only those it takes part in."""
+    if not selection:
+        return True
+    selected = {normalize_name(name) for name in selection}
+    return bool(selected & {normalize_name(node) for node in cycle})
+
+
+def detect_cyclic_edges(G, selection=None):
     print("Detecting cyclic edges")
     bad_edges = set()
     cycles = nx.simple_cycles(G)
     for cycle in cycles:
+        if not cycle_is_selected(cycle, selection):
+            for idx in range(len(cycle) - 1):
+                print(f"ignored edge {cycle[idx]} -> {cycle[idx + 1]}")
+            continue
         for idx in range(len(cycle) - 1):
             print(f"found edge {cycle[idx]} -> {cycle[idx + 1]}")
             bad_edges.add((cycle[idx], cycle[idx + 1]))
@@ -38,12 +56,14 @@ def detect_cyclic_edges(G):
     return bad_edges
 
 
-def extract_cyclic_graph(G):
+def extract_cyclic_graph(G, selection=None):
     print("Extracting cyclic edges")
     CG = nx.DiGraph()
     bad_edges = set()
     for num, cycle in enumerate(nx.simple_cycles(G)):
         if (cycle[-1], cycle[0]) in bad_edges:
+            continue
+        if not cycle_is_selected(cycle, selection):
             continue
         for idx in range(len(cycle) - 1):
             CG.add_edge(f"{cycle[idx]} ({num})", f"{cycle[idx + 1]} ({num})")

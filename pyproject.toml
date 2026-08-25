@@ -57,7 +57,7 @@ readme = {file = ["README.md", "CHANGES.md", "LICENSE.md"], content-type = "text
 minversion = "6.0"
 addopts = "-ra -q"
 testpaths = [
-    "src",
+    "tests",
 ]
 
 [tool.isort]
