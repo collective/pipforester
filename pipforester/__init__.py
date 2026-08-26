@@ -5,7 +5,7 @@ import json
 
 
 @click.command()
-@click.option("--input", "-i", type=click.File("r"))
+@click.option("--input", "-i", "input_file", type=click.File("r"))
 @click.option("--output", "-o")
 @click.option("--cycles", is_flag=True)
 @click.option("--check-cycles", is_flag=True)
@@ -20,13 +20,13 @@ import json
         "Without it every cycle is reported and fatal."
     ),
 )
-def main(input, output, cycles, check_cycles, select):
-    deptreedata = json.load(input)
+def main(input_file, output, cycles, check_cycles, select):
+    deptreedata = json.load(input_file)
     graph = deptree.graph_from_json(deptreedata)
     if check_cycles:
         bad_edges = deptree.detect_cyclic_edges(graph, selection=select)
         if bad_edges:
-            print("Cyclic dependencies detected")
+            click.echo("Cyclic dependencies detected")
             exit(1)
     elif cycles:
         graph = deptree.extract_cyclic_graph(graph, selection=select)
