@@ -1,25 +1,30 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
 [project]
 name = "pipforester"
+dynamic = ["version"]
 description = "A tool to analyze the dependency graph of a pip package."
-version = "1.0.2.dev0"
+readme = "README.md"
+license = "BSD-2-Clause"
+license-files = ["LICENSE.md"]
 keywords = ["pip", "graph", "analysis"]
 authors = [
   {name = "Jens Klein et al", email = "jk@kleinundpartner.at" }
 ]
-requires-python = ">=3.7"
-license = { text = "BSD 2-Clause License" }
+requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Build Tools",
-    "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
     "click",
@@ -27,60 +32,85 @@ dependencies = [
     "pipdeptree",
     "pygraphviz",
 ]
-dynamic = ["readme"]
-
-[project.optional-dependencies]
-test = [
-    "pytest",
-]
 
 [project.urls]
 Homepage = "https://github.com/collective/pipforester"
-"Bug Reports" = "https://github.com/collective/pipforester/issues"
-Source = "https://github.com/collective/pipforester/"
+Repository = "https://github.com/collective/pipforester"
+Changelog = "https://github.com/collective/pipforester/blob/main/CHANGES.md"
+Issues = "https://github.com/collective/pipforester/issues"
 
 [project.scripts]
 pipforester = "pipforester:main"
 
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-zip-safe = false
-packages = ["pipforester"]
-
-[tool.setuptools.dynamic]
-readme = {file = ["README.md", "CHANGES.md", "LICENSE.md"], content-type = "text/markdown"}
-
-[tool.pytest.ini_options]
-minversion = "6.0"
-addopts = "-ra -q"
-testpaths = [
-    "tests",
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+    "coverage[toml]>=7.0",
 ]
 
-[tool.isort]
-profile = "black"
-force_alphabetical_sort = true
-force_single_line = true
-lines_after_imports = 2
+[tool.hatch.build.targets.wheel]
+packages = ["pipforester"]
 
-[tool.mypy]
-ignore_missing_imports = true
+[tool.hatch.version]
+source = "vcs"
+raw-options = { local_scheme = "no-local-version" }
+fallback-version = "0.0.0.dev0"
 
-[tool.flake8]
-# Excludes due to known issues or incompatibilities with black:
-# BLK100: Black would make changes. https://pypi.org/project/flake8-black/
-# W503: https://github.com/psf/black/search?q=W503&unscoped_q=W503
-# E231: https://github.com/psf/black/issues/1202
-ignore = "BLK100,E231,W503,D100,D101,D102,D102,D103,D104,D105,D106,D107,D202,D205"
-statistics = 1
-# black official is 88, but can get longer
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+parallel = true
+source = ["pipforester"]
+relative_files = true
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 65
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "A",
+    "B",
+    "C4",
+    "C901",
+    "E",
+    "F",
+    "I",
+    "RUF",
+    "SIM",
+    "T20",
+    "UP",
+    "W",
+]
+ignore = [
+    "E501",
+    "RUF001",
+    "RUF002",
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+from-first = true
+lines-after-imports = 2
+lines-between-types = 1
+no-sections = true
+order-by-type = false
+
+[tool.ruff.lint.mccabe]
+max-complexity = 13
+
+[tool.ruff.lint.pycodestyle]
 max-line-length = 120
+max-doc-length = 120
 
-[tool.doc8]
-# TODO: Remove current max-line-lengh ignore in follow-up and adopt black limit.
-# max-line-length = 88
-ignore = "D001"
-
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["T201"]

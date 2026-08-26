@@ -128,3 +128,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# local virtualenvs for tryouts
+venvs/
+
+# generated dependency-graph outputs
+*.dot
+*deptree.json
+out*.png
+out*.svg
+out*.jpeg
+trees/

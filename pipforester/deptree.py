@@ -1,3 +1,4 @@
+import click
 import json
 import networkx as nx
 import re
@@ -41,23 +42,23 @@ def cycle_is_selected(cycle, selection):
 
 
 def detect_cyclic_edges(G, selection=None):
-    print("Detecting cyclic edges")
+    click.echo("Detecting cyclic edges")
     bad_edges = set()
     cycles = nx.simple_cycles(G)
     for cycle in cycles:
         if not cycle_is_selected(cycle, selection):
             for idx in range(len(cycle) - 1):
-                print(f"ignored edge {cycle[idx]} -> {cycle[idx + 1]}")
+                click.echo(f"ignored edge {cycle[idx]} -> {cycle[idx + 1]}")
             continue
         for idx in range(len(cycle) - 1):
-            print(f"found edge {cycle[idx]} -> {cycle[idx + 1]}")
+            click.echo(f"found edge {cycle[idx]} -> {cycle[idx + 1]}")
             bad_edges.add((cycle[idx], cycle[idx + 1]))
         bad_edges.add((cycle[-1], cycle[0]))
     return bad_edges
 
 
 def extract_cyclic_graph(G, selection=None):
-    print("Extracting cyclic edges")
+    click.echo("Extracting cyclic edges")
     CG = nx.DiGraph()
     bad_edges = set()
     for num, cycle in enumerate(nx.simple_cycles(G)):
@@ -73,13 +74,13 @@ def extract_cyclic_graph(G, selection=None):
 
 
 def remove_cyclic_edges(G, bad_edges):
-    print("Removing cyclic edges")
+    click.echo("Removing cyclic edges")
     for edge in bad_edges:
         G.remove_edge(edge[0], edge[1])
 
 
 def add_cyclic_edges(G, bad_edges):
-    print("Adding cyclic edges")
+    click.echo("Adding cyclic edges")
     for edge in bad_edges:
         G.add_edge(edge[0], edge[1])
         G.edges[edge[0], edge[1]]["color"] = "darkviolet"
