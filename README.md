@@ -74,5 +74,15 @@ The option is repeatable, and the name is normalized the way *pipdeptree* keys i
 Without `--select` every cycle is fatal, so a central package can keep watching the whole stack.
 `--select` applies to `--cycles` as well, which then graphs only the cycles you selected.
 
+The selection can also come from the environment variable `PIPFORESTER_SELECT`, with several
+names separated by whitespace.
+This helps when the command line is generated, for example a `tox.ini`, and only the CI
+workflow knows which distribution is under test.
+The command line option wins over the environment variable.
+
+```shell
+PIPFORESTER_SELECT=plone.app.testing pipforester -i forest.json --check-cycles
+```
+
 See `pipforester --help` for details.
 
