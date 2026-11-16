@@ -1,10 +1,12 @@
 ## Changes
 
-## 1.0.2 (unreleased)
-
+## 1.1.0 (2026-11-16)
 
 - add a `--select`/`-s` option to only fail on cycles the given distribution takes part in,
   so a package is not blocked by cycles it cannot fix. Fixes #6. [@remdub]
+- read `--select` from the environment variable `PIPFORESTER_SELECT` as well, so a CI workflow
+  can set it without changing the generated command line. [@jensens]
+- modernize packaging (hatchling, hatch-vcs), CI and release setup. [@jensens]
 
 
 ## 1.0.1 (2023-07-14)

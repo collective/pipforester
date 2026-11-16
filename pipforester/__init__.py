@@ -14,10 +14,13 @@ import json
     "-s",
     multiple=True,
     metavar="DIST",
+    envvar="PIPFORESTER_SELECT",
+    show_envvar=True,
     help=(
         "Only report cycles the given distribution takes part in. Repeatable. "
         "Cycles between other packages are still printed, but do not fail the run. "
-        "Without it every cycle is reported and fatal."
+        "Without it every cycle is reported and fatal. "
+        "The environment variable takes several names separated by whitespace."
     ),
 )
 def main(input_file, output, cycles, check_cycles, select):
